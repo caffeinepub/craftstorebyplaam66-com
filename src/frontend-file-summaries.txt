@@ -1,9 +1,9 @@
 {
-  "frontend/src/App.tsx": "Main application component that sets up routing with TanStack Router, wraps the app with ThemeProvider and CartProvider, and defines all routes (shop, product details, cart, checkout, order confirmation, about, contact, payment success/failure).",
+  "frontend/src/App.tsx": "Main application component that sets up routing with TanStack Router, wraps the app with ThemeProvider and CartProvider, and defines all routes including the new admin products route at /admin/products.",
   "frontend/src/cart/cartTypes.ts": "Defines cart-related TypeScript types (CartItem, Cart) and utility functions for calculating line totals, subtotals, totals, and item counts.",
   "frontend/src/cart/CartProvider.tsx": "React context provider that manages cart state (add, update, remove, clear items) with localStorage persistence across page refreshes.",
   "frontend/src/components/layout/StoreLayout.tsx": "Shared layout component that wraps all pages with Header, main content area, and Footer for consistent navigation and structure.",
-  "frontend/src/components/layout/Header.tsx": "Responsive header with logo, navigation links, search bar, category filters, cart icon with item count badge, and mobile menu using Sheet component.",
+  "frontend/src/components/layout/Header.tsx": "Responsive header with logo, navigation links, search bar, category filters, cart icon, mobile menu, and conditional admin \"Manage Products\" link visible only to authenticated admin users.",
   "frontend/src/components/layout/Footer.tsx": "Footer component with about section, quick links, social media icons, copyright notice, and Caffeine.ai attribution with UTM tracking.",
   "frontend/src/components/products/ProductCard.tsx": "Product card component displaying product image, name, category, price, and Add to Cart button with hover effects and toast notifications.",
   "frontend/src/hooks/useProducts.ts": "React Query hook to fetch all products from the backend actor.",
@@ -25,7 +25,10 @@
   "frontend/src/payments/PaymentSetupPanel.tsx": "Admin-only panel for configuring Stripe (secret key and allowed countries) that only displays when Stripe is not yet configured and user is admin.",
   "frontend/src/storefront/filtersStore.ts": "Zustand store managing shared filter state (search text and selected category) for synchronization between Header and ShopPage.",
   "frontend/src/utils/money.ts": "Utility function to format prices in cents as USD currency strings.",
-  "frontend/src/utils/productImages.ts": "Maps backend product imageRef values to generated static image paths under /assets/generated.",
+  "frontend/src/utils/productImages.ts": "Maps backend product imageRef values to display URLs, supporting data URLs for uploaded images, http/https URLs for external images, and filename mapping for seeded products with fallback.",
   "frontend/src/index.css": "Global styles with warm neutral OKLCH color palette (terracotta primary, sand secondary), improved typography, tap-friendly sizing for mobile, and utility classes.",
-  "frontend/tailwind.config.js": "Tailwind configuration with warm neutral color tokens, Inter/Lora font families, custom border radius, soft shadows, and extended theme for the handcrafted store aesthetic."
+  "frontend/tailwind.config.js": "Tailwind configuration with warm neutral color tokens, Inter/Lora font families, custom border radius, soft shadows, and extended theme for the handcrafted store aesthetic.",
+  "frontend/src/hooks/useIsAdmin.ts": "React Query hook that checks if the current authenticated user is an admin by calling the backend isCallerAdmin method, with proper loading states and identity dependency.",
+  "frontend/src/hooks/useAddProduct.ts": "React Query mutation hook that adds a new product to the backend catalog and invalidates the products and categories queries to refresh the UI.",
+  "frontend/src/pages/AdminProductsPage.tsx": "Admin-only product management page with Internet Identity login gating, admin authorization check, product creation form with image upload/preview, and inline help documentation."
 }

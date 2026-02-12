@@ -7,5 +7,16 @@ const IMAGE_MAP: Record<string, string> = {
 };
 
 export function getProductImageUrl(imageRef: string): string {
+  // Handle data URLs (uploaded images)
+  if (imageRef.startsWith('data:')) {
+    return imageRef;
+  }
+  
+  // Handle http/https URLs
+  if (imageRef.startsWith('http://') || imageRef.startsWith('https://')) {
+    return imageRef;
+  }
+  
+  // Handle mapped filenames (seeded products)
   return IMAGE_MAP[imageRef] || '/assets/generated/product-accessories-mix.dim_800x800.png';
 }

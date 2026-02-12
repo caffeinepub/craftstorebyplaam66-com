@@ -5,6 +5,8 @@ import { useCart } from '../../cart/CartProvider';
 import { getTotalItemCount } from '../../cart/cartTypes';
 import { useFilters } from '../../storefront/filtersStore';
 import { useCategories } from '../../hooks/useCategories';
+import { useIsAdmin } from '../../hooks/useIsAdmin';
+import { useInternetIdentity } from '../../hooks/useInternetIdentity';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../ui/sheet';
@@ -14,8 +16,13 @@ export default function Header() {
   const itemCount = getTotalItemCount(items);
   const { searchText, setSearchText, selectedCategory, setSelectedCategory } = useFilters();
   const { data: categories = [] } = useCategories();
+  const { isAdmin, isLoading: adminLoading } = useIsAdmin();
+  const { identity } = useInternetIdentity();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const isAuthenticated = !!identity;
+  const showAdminLink = isAuthenticated && isAdmin && !adminLoading;
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category === selectedCategory ? null : category);
@@ -58,6 +65,14 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            {showAdminLink && (
+              <Link
+                to="/admin/products"
+                className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
+              >
+                Manage Products
+              </Link>
+            )}
           </nav>
 
           {/* Search Bar - Desktop */}
@@ -165,6 +180,15 @@ export default function Header() {
                         </Link>
                       </SheetClose>
                     ))}
+                    {showAdminLink && (
+                      <SheetClose asChild>
+                        <Link to="/admin/products">
+                          <Button variant="ghost" className="w-full justify-start text-primary">
+                            Manage Products
+                          </Button>
+                        </Link>
+                      </SheetClose>
+                    )}
                   </nav>
                 </div>
               </SheetContent>

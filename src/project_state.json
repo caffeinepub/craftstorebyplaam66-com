@@ -1,92 +1,48 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "E-commerce website for a handcrafted products store (craftstorebyplaam66.com) selling bangles/accessories/handmade items, with product browsing, cart/checkout, payments, search/categories, and a clean mobile-friendly UI.",
-  "architectural_notes": [
-    "Clean minimalist UI: white background, big readable fonts, strong product photography",
-    "Core site structure: Home/Shop → Product pages → Cart/Checkout → About/Contact (User account optional)"
-  ],
+  "summary": "Craft store website project; needs ability to add/upload products to the site.",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Minimal craft store wordmark logo, black/charcoal on transparent background (craftstore-logo.dim_512x256.png)\n- Minimalist hero banner with white background and warm neutral abstract shapes (craftstore-hero.dim_1600x600.png)\n- Product photo-style image of red bangles on a clean white backdrop (product-bangles-red.dim_800x800.png)\n- Product photo-style image of a leather handbag on a clean white backdrop (product-leather-bag.dim_800x800.png)\n- Product photo-style image of assorted handmade accessories on a clean white backdrop (product-accessories-mix.dim_800x800.png)",
   "existing_features": [
     {
-      "id": "feature-create-the-storefront-information-architecture-and-navigation-with-these-pages-routes-home-shop-product-listing-product-details-cart-checkout-about-and-contact-the-header-must-include-a-category-navigation-control-and-a-search-input-and-must-be-usable-on-mobile",
-      "title": "Create the storefront information architecture and navigation with these pages/routes: Home/Shop (product listing), Product Details, Cart, Checkout, About, and Contact. The header must include a category navigation control and a search input, and must be usable on mobile.",
+      "id": "feature-add-an-admin-only-product-management-page-that-lets-the-store-owner-add-new-products-to-the-catalog-from-the-live-website",
+      "title": "Add an admin-only Product Management page that lets the store owner add new products to the catalog from the live website.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-a-product-showcase-on-the-home-shop-page-that-displays-products-as-clean-cards-with-product-photo-name-price-and-an-add-to-cart-button-include-example-categories-such-as-bangles-accessories-and-handmade-products",
-      "title": "Implement a product showcase on the Home/Shop page that displays products as clean cards with: product photo, name, price, and an “Add to Cart” button. Include example categories such as bangles, accessories, and handmade products.",
+      "id": "feature-implement-product-image-upload-support-in-the-admin-add-product-form-by-allowing-the-admin-to-choose-a-local-image-file-and-store-it-as-a-data-url-in-the-product-s-imageref-with-a-preview-before-saving",
+      "title": "Implement product image “upload” support in the admin add-product form by allowing the admin to choose a local image file and store it as a data URL in the product’s imageRef, with a preview before saving.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-product-details-pages-that-show-a-larger-product-image-name-price-description-category-and-an-add-to-cart-action",
-      "title": "Add Product Details pages that show a larger product image, name, price, description, category, and an “Add to Cart” action.",
+      "id": "feature-update-product-image-rendering-so-product-imageref-can-be-either-1-an-existing-mapped-filename-current-behavior-or-2-a-direct-url-data-url-new-behavior",
+      "title": "Update product image rendering so Product.imageRef can be either (1) an existing mapped filename (current behavior) or (2) a direct URL/data URL (new behavior).",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-cart-functionality-users-can-add-items-to-the-cart-view-and-edit-the-cart-change-quantity-remove-items-see-subtotal-total-and-proceed-to-checkout-cart-must-persist-during-a-browsing-session-page-refresh-should-not-lose-cart",
-      "title": "Implement cart functionality: users can add items to the cart, view and edit the cart (change quantity, remove items), see subtotal/total, and proceed to checkout. Cart must persist during a browsing session (page refresh should not lose cart).",
+      "id": "feature-expose-an-entry-point-to-the-admin-product-management-page-from-the-main-ui-visible-only-to-admins",
+      "title": "Expose an entry point to the admin product management page from the main UI, visible only to admins.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-a-checkout-flow-that-supports-cart-review-collecting-basic-customer-details-name-email-phone-shipping-address-selecting-a-payment-option-and-placing-an-order-after-placing-an-order-show-an-order-confirmation-screen-with-an-order-id-and-summary",
-      "title": "Implement a checkout flow that supports: cart review, collecting basic customer details (name, email, phone, shipping address), selecting a payment option, and placing an order. After placing an order, show an order confirmation screen with an order ID and summary.",
+      "id": "feature-provide-a-simple-in-app-how-to-add-products-help-section-on-the-admin-product-management-page-describing-the-required-fields-and-how-image-upload-works",
+      "title": "Provide a simple in-app “How to add products” help section on the admin product management page describing the required fields and how image upload works.",
       "reqIds": [
         "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-payments-integration-using-stripe-checkout-configured-to-allow-available-methods-such-as-credit-debit-cards-and-where-supported-by-stripe-account-region-upi-e-g-gpay-phonepe-wallets-and-netbanking-record-payment-result-against-the-order-paid-failed-pending-and-show-the-status-on-the-confirmation-page",
-      "title": "Add payments integration using Stripe Checkout, configured to allow available methods such as credit/debit cards and, where supported by Stripe account/region, UPI (e.g., GPay/PhonePe), wallets, and netbanking. Record payment result against the order (Paid/Failed/Pending) and show the status on the confirmation page.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-search-and-category-based-filtering-on-the-home-shop-page-search-must-filter-by-product-name-and-optionally-description-and-category-filtering-must-be-selectable-and-clearable",
-      "title": "Implement search and category-based filtering on the Home/Shop page. Search must filter by product name (and optionally description) and category filtering must be selectable and clearable.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-ui-is-mobile-friendly-and-responsive-tap-friendly-buttons-easy-scrolling-readable-typography-and-layouts-that-adapt-cleanly-from-phone-to-desktop",
-      "title": "Ensure the UI is mobile-friendly and responsive: tap-friendly buttons, easy scrolling, readable typography, and layouts that adapt cleanly from phone to desktop.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-clean-minimalist-visual-theme-consistent-across-the-app-white-base-warm-neutral-accents-e-g-sand-terracotta-charcoal-large-readable-fonts-generous-spacing-and-product-forward-layouts-suitable-for-a-handcrafted-store",
-      "title": "Apply a clean minimalist visual theme consistent across the app: white base, warm neutral accents (e.g., sand/terracotta/charcoal), large readable fonts, generous spacing, and product-forward layouts suitable for a handcrafted store.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-generate-and-add-required-static-images-to-the-project-under-frontend-public-assets-generated-and-render-them-in-the-ui-logo-in-header-hero-banner-on-home-shop-and-product-placeholder-images-used-by-the-seeded-catalog",
-      "title": "Generate and add required static images to the project under frontend/public/assets/generated and render them in the UI (logo in header, hero/banner on Home/Shop, and product placeholder images used by the seeded catalog).",
-      "reqIds": [
-        "REQ-11"
       ],
       "version": 1
     }
@@ -94,69 +50,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Product showcase (shop/home) with product cards showing photo, name, price, and Add to Cart",
+      "summary": "Add product management feature (add/upload products to the website, i.e., product catalog/admin interface)",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Product detail pages",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Cart and full checkout flow (select product → review cart → place order)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Payment integration supporting cards, UPI (GPay/PhonePe), and wallets/netbanking (as available)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Search bar and category-based navigation",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Responsive mobile-friendly design (easy scrolling and tap-friendly buttons)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Static pages: About and Contact",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Optional user accounts",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "Optional wishlist feature",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-17",
-      "summary": "Create backend product catalog endpoints/data that the frontend uses to render the shop: list products, get product by ID, and list categories. Seed the catalog with a small set of example handcrafted products (bangles/accessories/handmade) including name, price, category, description, and image reference.",
-      "reqIds": [
-        "REQ-8"
-      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "craftstorebyplaam66.com",
+  "projectName": "Add admin product upload/add-product workflow",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

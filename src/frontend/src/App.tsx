@@ -12,6 +12,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import PaymentSuccessPage from './payments/PaymentSuccessPage';
 import PaymentFailurePage from './payments/PaymentFailurePage';
+import AdminProductsPage from './pages/AdminProductsPage';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -75,6 +76,12 @@ const paymentFailureRoute = createRoute({
   component: PaymentFailurePage,
 });
 
+const adminProductsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/products',
+  component: AdminProductsPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   productRoute,
@@ -85,6 +92,7 @@ const routeTree = rootRoute.addChildren([
   contactRoute,
   paymentSuccessRoute,
   paymentFailureRoute,
+  adminProductsRoute,
 ]);
 
 const router = createRouter({ routeTree });

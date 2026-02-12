@@ -1,251 +1,120 @@
 {
   "kind": "build_request",
-  "title": "Handcrafted products e-commerce storefront with catalog, cart, checkout, and payments",
+  "title": "Add admin product upload/add-product workflow",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create the storefront information architecture and navigation with these pages/routes: Home/Shop (product listing), Product Details, Cart, Checkout, About, and Contact. The header must include a category navigation control and a search input, and must be usable on mobile.",
-      "target": "frontend",
+      "text": "Add an admin-only Product Management page that lets the store owner add new products to the catalog from the live website.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-1"
         ],
         "quotes": [
-          "📌 Home / Shop\n📌 Product pages\n📌 Cart / Checkout\n📌 About / Contact",
-          "✅ 4. Search & Navigation\n\nProducts categories vuntayi\n\nSearch bar untundi (fast product find)"
+          "now how i add product in that website and how to upload my product"
         ]
       },
       "acceptanceCriteria": [
-        "Users can navigate to Home/Shop, Product Details, Cart, Checkout, About, and Contact from within the app",
-        "Header includes a visible search field and a category navigation UI",
-        "Navigation is usable on small screens (mobile) without layout breakage"
+        "A new route exists for product management (e.g., /admin/products) and is reachable from the UI.",
+        "The page requires Internet Identity login; when not logged in, the page shows a clear prompt to sign in.",
+        "The page checks admin status using the backend and hides/blocks product management UI for non-admin users with a clear error message.",
+        "The page contains a product creation form for: name, description, priceInCents, category, stock, and image.",
+        "Submitting the form successfully calls the backend admin method to add the product and the new product appears in the Shop product list without a manual refresh (React Query invalidation/refetch)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement a product showcase on the Home/Shop page that displays products as clean cards with: product photo, name, price, and an “Add to Cart” button. Include example categories such as bangles, accessories, and handmade products.",
+      "text": "Implement product image “upload” support in the admin add-product form by allowing the admin to choose a local image file and store it as a data URL in the product’s imageRef, with a preview before saving.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-1"
         ],
         "quotes": [
-          "✅ 1. Product Showcase\n\nEach card lo:\n\nProduct photo\n\nName\n\nPrice\n\nAdd to cart button",
-          "🖼️ Example:\n❯ Red bangles\n❯ Leather bags\n❯ Accessories"
+          "how to upload my product"
         ]
       },
       "acceptanceCriteria": [
-        "Home/Shop displays a grid/list of product cards",
-        "Each card shows an image, product name, price, and an Add to Cart button",
-        "Cards are visually consistent and readable on mobile and desktop"
+        "The add-product form includes an image file input that accepts common formats (at least PNG and JPEG).",
+        "When an image file is selected, the UI shows a preview of the image.",
+        "On submit, the image is stored in product.imageRef as a data URL string, and the product cards/details pages render it correctly.",
+        "If no image is selected, the product still saves and uses the existing fallback product image behavior."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add Product Details pages that show a larger product image, name, price, description, category, and an “Add to Cart” action.",
+      "text": "Update product image rendering so Product.imageRef can be either (1) an existing mapped filename (current behavior) or (2) a direct URL/data URL (new behavior).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-1"
         ],
         "quotes": [
-          "📌 Product pages"
+          "how to upload my product"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking a product from the listing opens a Product Details view",
-        "Product Details includes image, name, price, category, and description",
-        "User can add the product to the cart from Product Details"
+        "If product.imageRef starts with \"data:\" it is used directly as the image src.",
+        "If product.imageRef starts with \"http://\" or \"https://\" it is used directly as the image src.",
+        "Otherwise, the existing filename-to-generated-asset mapping remains in effect and continues to work for seeded products."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Implement cart functionality: users can add items to the cart, view and edit the cart (change quantity, remove items), see subtotal/total, and proceed to checkout. Cart must persist during a browsing session (page refresh should not lose cart).",
+      "text": "Expose an entry point to the admin product management page from the main UI, visible only to admins.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-1"
         ],
         "quotes": [
-          "✅ 2. Cart + Checkout\n\n👉 Add to Cart click chesthe:\n\nCart page loki products add avuthayi"
+          "now how i add product in that website"
         ]
       },
       "acceptanceCriteria": [
-        "Add to Cart updates the cart item count and cart contents",
-        "Cart page supports quantity changes and item removal",
-        "Cart contents persist after page refresh (e.g., via local storage)",
-        "Cart page shows subtotal and total"
+        "Header navigation includes an “Admin” or “Manage Products” link/button when the signed-in user is an admin.",
+        "Non-admin users never see the admin navigation entry.",
+        "On mobile, the admin entry is also available in the mobile menu when the user is an admin."
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Implement a checkout flow that supports: cart review, collecting basic customer details (name, email, phone, shipping address), selecting a payment option, and placing an order. After placing an order, show an order confirmation screen with an order ID and summary.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "👉 Customer ga:\n✔ Product select\n✔ Cart review\n✔ Payment options choose\n✔ Order place",
-          "✅ 2. Cart + Checkout\n\nCheckout lo velli payment complete chesukovachu"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Checkout includes cart review and a form for customer details",
-        "User can place an order and receives an order confirmation with an order ID and order summary",
-        "Backend stores the order with items, totals, customer details, status, and timestamps",
-        "If payment is not completed/available, order status reflects that (e.g., Pending)"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add payments integration using Stripe Checkout, configured to allow available methods such as credit/debit cards and, where supported by Stripe account/region, UPI (e.g., GPay/PhonePe), wallets, and netbanking. Record payment result against the order (Paid/Failed/Pending) and show the status on the confirmation page.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "✅ 3. Payments Available\n\nCustomers credit/debit cards\n\nUPI (GPay/PhonePe)\n\nWallets / netbanking\n(depends on setup)\n\nPurchase chesi upfront payment kuda cheyyachu"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Checkout can initiate a Stripe Checkout session for an order",
-        "After returning from payment, the order status is updated to reflect payment state (Paid/Failed/Pending)",
-        "UI clearly displays payment status on the order confirmation page",
-        "Payment methods shown are determined by Stripe configuration/region (no hardcoded guarantees beyond Stripe)"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Implement search and category-based filtering on the Home/Shop page. Search must filter by product name (and optionally description) and category filtering must be selectable and clearable.",
+      "text": "Provide a simple in-app “How to add products” help section on the admin product management page describing the required fields and how image upload works.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-1"
         ],
         "quotes": [
-          "✅ 4. Search & Navigation\n\nProducts categories vuntayi\n\nSearch bar untundi (fast product find)"
+          "now how i add product in that website and how to upload my product"
         ]
       },
       "acceptanceCriteria": [
-        "Typing in the search field filters the visible products by name",
-        "Selecting a category filters products to that category",
-        "User can clear filters to return to the full product list",
-        "Filtering works smoothly on mobile and desktop"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Create backend product catalog endpoints/data that the frontend uses to render the shop: list products, get product by ID, and list categories. Seed the catalog with a small set of example handcrafted products (bangles/accessories/handmade) including name, price, category, description, and image reference.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Bundles of bangles / accessories / handmade products ni online lo display chestundi."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend exposes methods to list products and fetch a product by ID",
-        "Backend exposes categories derived from products (or a defined category list)",
-        "Frontend renders products from backend data (not hardcoded in the UI)",
-        "Seed data includes at least a few products spanning the stated categories"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Ensure the UI is mobile-friendly and responsive: tap-friendly buttons, easy scrolling, readable typography, and layouts that adapt cleanly from phone to desktop.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "✅ 5. Mobile Friendly\n\nResponsive layout\n\nEasy scrolling\n\nButtons tappinche laga"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All core pages (Shop, Product Details, Cart, Checkout) are usable on a small viewport without horizontal scrolling",
-        "Interactive controls meet tap-friendly sizing expectations",
-        "Typography remains readable at common mobile widths"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Apply a clean minimalist visual theme consistent across the app: white base, warm neutral accents (e.g., sand/terracotta/charcoal), large readable fonts, generous spacing, and product-forward layouts suitable for a handcrafted store.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "⭐ LOOK & FEEL\n\nClean minimalist design\n\nWhite background\n\nBig readable fonts\n\nVisual product photos"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All pages share consistent typography, spacing, and color usage",
-        "Background is primarily white with warm neutral accents (not blue/purple)",
-        "Product imagery is visually emphasized (card/layout hierarchy)"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Generate and add required static images to the project under frontend/public/assets/generated and render them in the UI (logo in header, hero/banner on Home/Shop, and product placeholder images used by the seeded catalog).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Visual product photos"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Generated images are present in frontend/public/assets/generated with the specified filenames",
-        "Header displays the generated logo image",
-        "Home/Shop displays a hero/banner image",
-        "Seeded products display the generated product images as their photos"
+        "The admin product page includes a short help section in English explaining: required fields, pricing in cents (with an example), stock behavior, and image upload/preview.",
+        "The help text is visible without leaving the page (no external links required)."
       ]
     }
   ],
   "constraints": [
-    "Use English for all user-facing UI text.",
-    "Backend must remain a single Motoko actor (single-canister backend).",
-    "Do not modify files under frontend immutablePaths; compose existing UI components instead.",
-    "Payments must use Stripe (no third-party auth providers; Internet Identity only if accounts are later added)."
+    "Do not edit files in frontend immutablePaths (e.g., frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui).",
+    "Backend must remain a single Motoko actor in backend/main.mo; add new backend methods only if required for the product management workflow."
   ],
   "nonGoals": [
-    "Admin/owner dashboard for managing products (e.g., WordPress-like editing) is out of scope for this build.",
-    "User accounts (login, order history tied to a user) are optional and not included unless requested next.",
-    "Wishlist feature is optional and not included unless requested next.",
-    "Real-time features (chat, WebSockets, push notifications) are out of scope."
+    "Implementing full CRUD for products (edit/update/delete) unless required to support adding/uploading.",
+    "Storing uploaded images as separate binary assets served by the backend canister (use data URLs in imageRef as specified).",
+    "Adding third-party authentication providers (only Internet Identity)."
   ],
   "imageRequirements": {
-    "required": [
-      "Minimal craft store wordmark logo, black/charcoal on transparent background (craftstore-logo.dim_512x256.png)",
-      "Minimalist hero banner with white background and warm neutral abstract shapes (craftstore-hero.dim_1600x600.png)",
-      "Product photo-style image of red bangles on a clean white backdrop (product-bangles-red.dim_800x800.png)",
-      "Product photo-style image of a leather handbag on a clean white backdrop (product-leather-bag.dim_800x800.png)",
-      "Product photo-style image of assorted handmade accessories on a clean white backdrop (product-accessories-mix.dim_800x800.png)"
-    ],
+    "required": [],
     "edits": []
   },
   "userProfileUpdate": {
-    "goalsToAdd": [
-      "Build a mobile-friendly e-commerce website for handcrafted products with product browsing, cart, checkout, and payments."
-    ],
+    "goalsToAdd": [],
     "goalsToRemove": [],
-    "preferencesToAdd": [
-      "User-facing text should be in English.",
-      "Design should be clean minimalist with a white base and warm neutral accents."
-    ],
+    "preferencesToAdd": [],
     "preferencesToRemove": [],
-    "miscToAdd": [
-      "Target store domain/name referenced: craftstorebyplaam66.com"
-    ],
+    "miscToAdd": [],
     "miscToRemove": [],
     "fieldsToSet": {},
     "fieldsToDelete": []

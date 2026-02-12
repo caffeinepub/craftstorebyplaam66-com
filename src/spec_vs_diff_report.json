@@ -1,128 +1,53 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T04:18:58.396Z",
-  "summary": "Diff adds a TanStack Router-based storefront with Shop/Product/Cart/Checkout/About/Contact routes, cart state with localStorage persistence, UI theming geared to warm neutrals, and a Motoko backend actor with product/order types and basic catalog/order methods. However, the diff evidence is incomplete for Stripe Checkout session creation/payment status reconciliation, backend seeding, and the required generated static image assets.",
+  "generatedAt": "2026-02-12T04:41:10.002Z",
+  "summary": "Core plumbing for an admin add-product workflow is present (new /admin/products route, addProduct backend method with admin guard, React Query mutation with products invalidation, admin-only header link, and productImages now supports data/http URLs). However, several acceptance-criteria UI details are not evidenced in the truncated diffs (help section, mobile admin entry, explicit non-admin blocking message, and specific image input/preview UI elements).",
   "missing_requirements": [
     {
+      "id": "REQ-4",
+      "requirement": "On mobile, the admin entry is also available in the mobile menu when the user is an admin.",
+      "reason": "Header.tsx shows a conditional \"Manage Products\" link in the desktop navigation, but the diff is truncated before the mobile menu contents; there is no explicit evidence the admin entry is added to the mobile menu.",
+      "evidence": [
+        "frontend/src/components/layout/Header.tsx (truncated)"
+      ]
+    },
+    {
       "id": "REQ-5",
-      "requirement": "Backend stores the order with items, totals, customer details, status, and timestamps; checkout ends with an order confirmation screen showing order ID + summary.",
-      "reason": "Backend Order type shown has no timestamps fields, and the createOrder implementation shown does not set timestamps. Order confirmation page exists as a route, but its implementation is not present in the visible diff excerpt to confirm it renders order ID + summary.",
+      "requirement": "Admin product page includes an in-app “How to add products” help section describing required fields, pricing in cents (example), stock behavior, and image upload/preview.",
+      "reason": "AdminProductsPage.tsx is truncated and the provided portion does not show any help/instructions section content.",
       "evidence": [
-        "backend/main.mo (truncated) – type Order lacks timestamps; createOrder shown without timestamps",
-        "frontend/src/App.tsx – route '/order/$orderId' added but page content not shown"
+        "frontend/src/pages/AdminProductsPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-6",
-      "requirement": "Stripe Checkout integration: initiate Stripe Checkout session for an order; after returning from payment, update order payment state (Paid/Failed/Pending) and show status on confirmation page.",
-      "reason": "Backend shows Stripe imports and fields like stripeSessionId/paymentStatus, but the diff excerpt does not show any method that creates a Stripe Checkout session, nor any callback/return handler that updates paymentStatus based on Stripe result. Frontend includes payment success/failure routes/components, but their logic is not shown in the excerpt and cannot confirm status update + display on confirmation.",
+      "id": "REQ-2",
+      "requirement": "The add-product form includes an image file input that accepts common formats (at least PNG and JPEG) and shows an image preview when selected.",
+      "reason": "The logic reads a selected file via FileReader and stores a data URL, but the diff snippet does not show the actual <input type=\"file\"> element with an accept attribute for PNG/JPEG nor any rendered preview element.",
       "evidence": [
-        "backend/main.mo (truncated) – Stripe imported; Order has stripeSessionId/paymentStatus; no visible create-checkout-session/update-payment methods in excerpt",
-        "frontend/src/App.tsx – routes '/payment-success' and '/payment-failure' exist; no evidence of backend status reconciliation",
-        "frontend/src/pages/CheckoutPage.tsx (truncated) – uses PaymentButton/PaymentSetupPanel but their implementation is not shown"
+        "frontend/src/pages/AdminProductsPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-8",
-      "requirement": "Seed backend product catalog with example handcrafted products spanning bangles/accessories/handmade, and have frontend render products from backend data (not hardcoded).",
-      "reason": "Backend defines productCatalog and read methods (getProducts/getProductById/getCategories), but the diff excerpt does not show any seeding/initial population. There is an admin-only addProduct, but no evidence of seed data being inserted at init. Frontend data-fetch hooks exist, but ShopPage implementation is not shown to verify it uses backend data rather than hardcoded items.",
+      "id": "REQ-1",
+      "requirement": "The page blocks/hides product management UI for non-admin users with a clear error message.",
+      "reason": "AdminProductsPage.tsx shows the not-authenticated login prompt, but the diff is truncated before any explicit non-admin gating/error UI is shown.",
       "evidence": [
-        "backend/main.mo (truncated) – productCatalog initialized empty; only addProduct shown for insertion; no seed routine visible",
-        "frontend/src/hooks/useProducts.ts – calls actor.getProducts(); ShopPage not included in excerpt"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "requirement": "Generated images exist under frontend/public/assets/generated with specified filenames and are rendered in UI (logo, hero/banner, product images).",
-      "reason": "Header references the logo filename, but the diff summary does not show the required image files being added under frontend/public/assets/generated, nor evidence of the hero/banner image usage on Shop page, nor that seeded products reference those image filenames.",
-      "evidence": [
-        "frontend/src/components/layout/Header.tsx (truncated) – references '/assets/generated/craftstore-logo.dim_512x256.png'",
-        "Diff summary – omitted files due to limits: added=19 (could include assets, but not evidenced)",
-        "frontend/src/pages/ShopPage (not shown) – no evidence of hero/banner rendering",
-        "backend/main.mo (truncated) – no visible seeded products with imageRef pointing to required filenames"
+        "frontend/src/pages/AdminProductsPage.tsx (truncated)"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "Role-based access control system with admin/user permissions, secret-based initialization, and admin-only product management APIs.",
-      "reason": "BuildRequest did not request RBAC, admin product management, or secret-token initialization; it also explicitly states an admin/owner dashboard is out of scope.",
-      "evidence": [
-        "backend/main.mo (truncated) – AccessControl/MixinAuthorization; addProduct requires #admin; createOrder requires #user",
-        "frontend/src/hooks/useActor.ts – calls actor._initializeAccessControlWithSecret(adminToken) using URL param 'caffeineAdminToken'"
-      ]
-    },
-    {
-      "description": "User profile management endpoints (get/save user profiles) tied to authenticated users.",
-      "reason": "User accounts are optional and not included unless requested next; profiles were not requested.",
-      "evidence": [
-        "backend/main.mo (truncated) – types UserProfile and methods getCallerUserProfile/getUserProfile/saveCallerUserProfile with permission checks"
-      ]
-    },
-    {
-      "description": "Mandatory login (Internet Identity) requirement to create orders/checkout.",
-      "reason": "BuildRequest did not require accounts/login; it said Internet Identity only if accounts are later added. Current checkout blocks order placement unless authenticated.",
-      "evidence": [
-        "frontend/src/pages/CheckoutPage.tsx (truncated) – prompts login and prevents placing order when not authenticated",
-        "backend/main.mo (truncated) – createOrder traps unless caller has #user permission"
-      ]
-    },
-    {
-      "description": "Separate payment success/failure routes and pages.",
-      "reason": "BuildRequest required returning from payment and showing status on the order confirmation screen, but did not request separate success/failure pages/routes.",
-      "evidence": [
-        "frontend/src/App.tsx – routes '/payment-success' and '/payment-failure' added"
-      ]
-    },
-    {
-      "description": "Footer marketing attribution link to caffeine.ai.",
-      "reason": "Not requested in BuildRequest UI requirements; adds external promotional link.",
-      "evidence": [
-        "frontend/src/components/layout/Footer.tsx – 'Built with caffeine.ai' link"
-      ]
-    }
-  ],
-  "confidence": 0.63,
+  "hallucinated_features": [],
+  "confidence": 0.66,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
     "frontend/src/App.tsx",
-    "frontend/src/cart/CartProvider.tsx",
-    "frontend/src/cart/cartTypes.ts",
-    "frontend/src/components/layout/Footer.tsx",
     "frontend/src/components/layout/Header.tsx",
-    "frontend/src/components/layout/StoreLayout.tsx",
-    "frontend/src/components/products/ProductCard.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useCategories.ts",
-    "frontend/src/hooks/useCreateOrder.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useOrder.ts",
-    "frontend/src/hooks/useProduct.ts",
-    "frontend/src/hooks/useProducts.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/AboutPage.tsx",
-    "frontend/src/pages/CartPage.tsx",
-    "frontend/src/pages/CheckoutPage.tsx",
-    "frontend/src/pages/ContactPage.tsx",
-    "frontend/src/pages/OrderConfirmationPage.tsx",
-    "frontend/src/pages/ProductDetailsPage.tsx",
-    "frontend/src/pages/ShopPage.tsx",
-    "frontend/src/payments/PaymentButton.tsx",
-    "frontend/src/payments/PaymentFailurePage.tsx",
-    "frontend/src/payments/PaymentSetupPanel.tsx",
-    "frontend/src/payments/PaymentSuccessPage.tsx",
-    "frontend/src/payments/useCreateCheckoutSession.ts",
-    "frontend/src/storefront/filtersStore.ts",
-    "frontend/src/utils/money.ts",
+    "frontend/src/hooks/useAddProduct.ts",
+    "frontend/src/hooks/useIsAdmin.ts",
+    "frontend/src/pages/AdminProductsPage.tsx",
     "frontend/src/utils/productImages.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

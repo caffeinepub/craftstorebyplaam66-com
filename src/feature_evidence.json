@@ -2,15 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-the-storefront-information-architecture-and-navigation-with-these-pages-routes-home-shop-product-listing-product-details-cart-checkout-about-and-contact-the-header-must-include-a-category-navigation-control-and-a-search-input-and-must-be-usable-on-mobile",
-      "featureTitle": "Create the storefront information architecture and navigation with these pages/routes: Home/Shop (product listing), Product Details, Cart, Checkout, About, and Contact. The header must include a category navigation control and a search input, and must be usable on mobile.",
+      "featureId": "feature-add-an-admin-only-product-management-page-that-lets-the-store-owner-add-new-products-to-the-catalog-from-the-live-website",
+      "featureTitle": "Add an admin-only Product Management page that lets the store owner add new products to the catalog from the live website.",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/layout/Header.tsx",
-        "frontend/src/components/layout/StoreLayout.tsx",
-        "frontend/src/main.tsx",
-        "frontend/src/pages/AboutPage.tsx",
-        "frontend/src/pages/ContactPage.tsx"
+        "frontend/src/hooks/useAddProduct.ts",
+        "frontend/src/hooks/useIsAdmin.ts",
+        "frontend/src/pages/AdminProductsPage.tsx"
       ],
       "components": [
         "stripe@3.0.0",
@@ -28,14 +26,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-product-showcase-on-the-home-shop-page-that-displays-products-as-clean-cards-with-product-photo-name-price-and-an-add-to-cart-button-include-example-categories-such-as-bangles-accessories-and-handmade-products",
-      "featureTitle": "Implement a product showcase on the Home/Shop page that displays products as clean cards with: product photo, name, price, and an “Add to Cart” button. Include example categories such as bangles, accessories, and handmade products.",
+      "featureId": "feature-implement-product-image-upload-support-in-the-admin-add-product-form-by-allowing-the-admin-to-choose-a-local-image-file-and-store-it-as-a-data-url-in-the-product-s-imageref-with-a-preview-before-saving",
+      "featureTitle": "Implement product image “upload” support in the admin add-product form by allowing the admin to choose a local image file and store it as a data URL in the product’s imageRef, with a preview before saving.",
       "files": [
-        "frontend/src/components/products/ProductCard.tsx",
-        "frontend/src/hooks/useProducts.ts",
-        "frontend/src/pages/ShopPage.tsx",
-        "frontend/src/utils/money.ts",
-        "frontend/src/utils/productImages.ts"
+        "frontend/src/pages/AdminProductsPage.tsx"
       ],
       "components": [
         "stripe@3.0.0",
@@ -53,11 +47,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-product-details-pages-that-show-a-larger-product-image-name-price-description-category-and-an-add-to-cart-action",
-      "featureTitle": "Add Product Details pages that show a larger product image, name, price, description, category, and an “Add to Cart” action.",
+      "featureId": "feature-update-product-image-rendering-so-product-imageref-can-be-either-1-an-existing-mapped-filename-current-behavior-or-2-a-direct-url-data-url-new-behavior",
+      "featureTitle": "Update product image rendering so Product.imageRef can be either (1) an existing mapped filename (current behavior) or (2) a direct URL/data URL (new behavior).",
       "files": [
-        "frontend/src/hooks/useProduct.ts",
-        "frontend/src/pages/ProductDetailsPage.tsx"
+        "frontend/src/utils/productImages.ts"
       ],
       "components": [
         "stripe@3.0.0",
@@ -75,16 +68,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-cart-functionality-users-can-add-items-to-the-cart-view-and-edit-the-cart-change-quantity-remove-items-see-subtotal-total-and-proceed-to-checkout-cart-must-persist-during-a-browsing-session-page-refresh-should-not-lose-cart",
-      "featureTitle": "Implement cart functionality: users can add items to the cart, view and edit the cart (change quantity, remove items), see subtotal/total, and proceed to checkout. Cart must persist during a browsing session (page refresh should not lose cart).",
+      "featureId": "feature-expose-an-entry-point-to-the-admin-product-management-page-from-the-main-ui-visible-only-to-admins",
+      "featureTitle": "Expose an entry point to the admin product management page from the main UI, visible only to admins.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/cart/CartProvider.tsx",
-        "frontend/src/cart/cartTypes.ts",
         "frontend/src/components/layout/Header.tsx",
-        "frontend/src/components/products/ProductCard.tsx",
-        "frontend/src/pages/CartPage.tsx",
-        "frontend/src/pages/ProductDetailsPage.tsx"
+        "frontend/src/hooks/useIsAdmin.ts"
       ],
       "components": [
         "stripe@3.0.0",
@@ -102,13 +90,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-checkout-flow-that-supports-cart-review-collecting-basic-customer-details-name-email-phone-shipping-address-selecting-a-payment-option-and-placing-an-order-after-placing-an-order-show-an-order-confirmation-screen-with-an-order-id-and-summary",
-      "featureTitle": "Implement a checkout flow that supports: cart review, collecting basic customer details (name, email, phone, shipping address), selecting a payment option, and placing an order. After placing an order, show an order confirmation screen with an order ID and summary.",
+      "featureId": "feature-provide-a-simple-in-app-how-to-add-products-help-section-on-the-admin-product-management-page-describing-the-required-fields-and-how-image-upload-works",
+      "featureTitle": "Provide a simple in-app “How to add products” help section on the admin product management page describing the required fields and how image upload works.",
       "files": [
-        "frontend/src/hooks/useCreateOrder.ts",
-        "frontend/src/hooks/useOrder.ts",
-        "frontend/src/pages/CheckoutPage.tsx",
-        "frontend/src/pages/OrderConfirmationPage.tsx"
+        "frontend/src/pages/AdminProductsPage.tsx"
       ],
       "components": [
         "stripe@3.0.0",
@@ -122,128 +107,6 @@
       ],
       "testIds": [
         "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-payments-integration-using-stripe-checkout-configured-to-allow-available-methods-such-as-credit-debit-cards-and-where-supported-by-stripe-account-region-upi-e-g-gpay-phonepe-wallets-and-netbanking-record-payment-result-against-the-order-paid-failed-pending-and-show-the-status-on-the-confirmation-page",
-      "featureTitle": "Add payments integration using Stripe Checkout, configured to allow available methods such as credit/debit cards and, where supported by Stripe account/region, UPI (e.g., GPay/PhonePe), wallets, and netbanking. Record payment result against the order (Paid/Failed/Pending) and show the status on the confirmation page.",
-      "files": [
-        "frontend/src/pages/CheckoutPage.tsx",
-        "frontend/src/pages/OrderConfirmationPage.tsx",
-        "frontend/src/payments/PaymentButton.tsx",
-        "frontend/src/payments/PaymentFailurePage.tsx",
-        "frontend/src/payments/PaymentSetupPanel.tsx",
-        "frontend/src/payments/PaymentSuccessPage.tsx",
-        "frontend/src/payments/useCreateCheckoutSession.ts"
-      ],
-      "components": [
-        "stripe@3.0.0",
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-search-and-category-based-filtering-on-the-home-shop-page-search-must-filter-by-product-name-and-optionally-description-and-category-filtering-must-be-selectable-and-clearable",
-      "featureTitle": "Implement search and category-based filtering on the Home/Shop page. Search must filter by product name (and optionally description) and category filtering must be selectable and clearable.",
-      "files": [
-        "frontend/src/components/layout/Header.tsx",
-        "frontend/src/hooks/useCategories.ts",
-        "frontend/src/pages/ShopPage.tsx",
-        "frontend/src/storefront/filtersStore.ts"
-      ],
-      "components": [
-        "stripe@3.0.0",
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-ui-is-mobile-friendly-and-responsive-tap-friendly-buttons-easy-scrolling-readable-typography-and-layouts-that-adapt-cleanly-from-phone-to-desktop",
-      "featureTitle": "Ensure the UI is mobile-friendly and responsive: tap-friendly buttons, easy scrolling, readable typography, and layouts that adapt cleanly from phone to desktop.",
-      "files": [
-        "frontend/src/components/layout/StoreLayout.tsx",
-        "frontend/src/index.css",
-        "frontend/src/pages/CartPage.tsx",
-        "frontend/src/pages/CheckoutPage.tsx",
-        "frontend/src/pages/ShopPage.tsx"
-      ],
-      "components": [
-        "stripe@3.0.0",
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-apply-a-clean-minimalist-visual-theme-consistent-across-the-app-white-base-warm-neutral-accents-e-g-sand-terracotta-charcoal-large-readable-fonts-generous-spacing-and-product-forward-layouts-suitable-for-a-handcrafted-store",
-      "featureTitle": "Apply a clean minimalist visual theme consistent across the app: white base, warm neutral accents (e.g., sand/terracotta/charcoal), large readable fonts, generous spacing, and product-forward layouts suitable for a handcrafted store.",
-      "files": [
-        "frontend/src/components/layout/Header.tsx",
-        "frontend/src/components/products/ProductCard.tsx",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "stripe@3.0.0",
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-and-add-required-static-images-to-the-project-under-frontend-public-assets-generated-and-render-them-in-the-ui-logo-in-header-hero-banner-on-home-shop-and-product-placeholder-images-used-by-the-seeded-catalog",
-      "featureTitle": "Generate and add required static images to the project under frontend/public/assets/generated and render them in the UI (logo in header, hero/banner on Home/Shop, and product placeholder images used by the seeded catalog).",
-      "files": [
-        "frontend/src/components/layout/Header.tsx",
-        "frontend/src/pages/ShopPage.tsx",
-        "frontend/src/utils/productImages.ts"
-      ],
-      "components": [
-        "stripe@3.0.0",
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
       ],
       "confidence": "high"
     }

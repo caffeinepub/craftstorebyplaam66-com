@@ -1,17 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Build a mobile-friendly handcrafted products storefront with product browsing, search/category filtering, cart, checkout, order confirmation, and Stripe payments.
+**Goal:** Let the store owner (admin) add new products—including an uploaded image—from the live website.
 
 **Planned changes:**
-- Create storefront pages/routes: Home/Shop (listing), Product Details, Cart, Checkout, About, Contact, plus responsive header with category navigation and search.
-- Implement product listing cards (image, name, price, Add to Cart) with example categories (bangles, accessories, handmade products).
-- Add Product Details pages with larger image, description, category, and Add to Cart.
-- Implement cart with add/view/edit (quantity/remove), subtotal/total, and persistence across refresh.
-- Build checkout flow: cart review, customer details form (name, email, phone, shipping address), payment option selection, place order, and confirmation page with order ID and summary.
-- Integrate Stripe Checkout; update and display payment status (Paid/Failed/Pending) on the confirmation page.
-- Add backend catalog APIs: list products, get product by ID, list categories; seed example products with image references.
-- Apply a consistent clean minimalist theme (white base, warm neutral accents) and ensure responsive, tap-friendly UI.
-- Add generated static assets (logo, hero/banner, product images) under `frontend/public/assets/generated` and render them in the UI.
+- Add an admin-only Product Management route (e.g., `/admin/products`) that requires Internet Identity login and blocks non-admin users with a clear message.
+- Add an admin product creation form with fields: name, description, priceInCents, category, stock, and image.
+- Implement image selection in the form (PNG/JPEG), show a preview, and save the chosen file as a data URL into `product.imageRef` (while keeping existing fallback behavior when no image is chosen).
+- Update product image rendering so `imageRef` supports: data URLs, http/https URLs, or existing filename-to-generated-asset mapping.
+- Add an admin-only navigation entry (“Admin” / “Manage Products”) in header and mobile menu linking to the admin product page.
+- Add a short in-page “How to add products” help section explaining required fields, price in cents (example), stock behavior, and image upload/preview.
+- Ensure newly added products appear in the Shop product list without a manual refresh (invalidate/refetch after successful add).
 
-**User-visible outcome:** Users can browse and filter handcrafted products, view details, add items to a persistent cart, complete checkout with Stripe payment, and see an order confirmation with payment status.
+**User-visible outcome:** Admin users can sign in, open an admin product page from the site navigation, fill out a form (optionally selecting an image with preview), submit to add a new product, and immediately see it appear in the shop; non-admin users cannot access or see the admin entry points.

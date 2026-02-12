@@ -202,8 +202,36 @@ actor {
     };
   };
 
-  public func getStripeSessionStatus(sessionId : Text) : async Stripe.StripeSessionStatus {
-    await Stripe.getSessionStatus(getStripeConfiguration(), sessionId, transform);
+  public shared ({ caller }) func getStripeSessionStatus(sessionId : Text) : async Stripe.StripeSessionStatus {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can check payment status");
+    };
+
+    // Find the order associated with this session and verify ownership
+    var foundOrder : ?Order = null;
+    for (order in orderMap.values()) {
+      switch (order.stripeSessionId) {
+        case (?sid) {
+          if (sid == sessionId) {
+            foundOrder := ?order;
+          };
+        };
+        case (null) {};
+      };
+    };
+
+    switch (foundOrder) {
+      case (null) {
+        Runtime.trap("Session not found or not associated with any order");
+      };
+      case (?order) {
+        // Verify ownership: user can only check their own sessions, admins can check all
+        if (order.owner != caller and not AccessControl.isAdmin(accessControlState, caller)) {
+          Runtime.trap("Unauthorized: Can only check status of your own payment sessions");
+        };
+        await Stripe.getSessionStatus(getStripeConfiguration(), sessionId, transform);
+      };
+    };
   };
 
   public shared ({ caller }) func updateOrderPaymentStatus(orderId : Text, status : PaymentStatus) : async () {
