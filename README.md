@@ -1,2 +1,3 @@
-# craftstorebyplaam66-com
-Exported from Caffeine project: craftstorebyplaam66.com
+## craftstorebyplaam66.com
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

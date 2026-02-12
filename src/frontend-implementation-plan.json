@@ -1,0 +1,407 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Handcrafted products storefront (catalog, cart, checkout, Stripe payments)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create routes/pages and responsive navigation header with category control and search input.",
+      "acceptanceCriteria": [
+        "Users can navigate to Home/Shop, Product Details, Cart, Checkout, About, and Contact from within the app",
+        "Header includes a visible search field and a category navigation UI",
+        "Navigation is usable on small screens (mobile) without layout breakage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell that renders the router provider, shared layout, and global error boundaries for the storefront pages."
+        },
+        {
+          "path": "frontend/src/router.tsx",
+          "operation": "create",
+          "description": "Add @tanstack/router route definitions for Home/Shop, Product Details, Cart, Checkout, About, Contact, plus payment success/failure and order confirmation routes required by checkout/payments wiring."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Wire the new App/router entry so all required routes render correctly from the React entry point."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "create",
+          "description": "Implement a mobile-friendly header with logo, category navigation control, search input, and cart link with item count badge. Use shadcn-ui components (e.g., Input, Button, Sheet/Drawer, Dropdown/Menu) to ensure accessibility and responsiveness. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/StoreLayout.tsx",
+          "operation": "create",
+          "description": "Create a shared layout (header + main container + footer) used by all storefront pages to ensure consistent navigation and spacing."
+        },
+        {
+          "path": "frontend/src/pages/AboutPage.tsx",
+          "operation": "create",
+          "description": "Create the About page with English informational text and consistent layout styling."
+        },
+        {
+          "path": "frontend/src/pages/ContactPage.tsx",
+          "operation": "create",
+          "description": "Create the Contact page with English text and basic contact form UI (non-submitting) or contact details, consistent with the theme."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement the Home/Shop product listing with clean product cards and Add to Cart actions, including example categories.",
+      "acceptanceCriteria": [
+        "Home/Shop displays a grid/list of product cards",
+        "Each card shows an image, product name, price, and an Add to Cart button",
+        "Cards are visually consistent and readable on mobile and desktop"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ShopPage.tsx",
+          "operation": "create",
+          "description": "Implement the Home/Shop page: hero/banner section, product grid, empty/loading states, and integrated search/category filters from header state."
+        },
+        {
+          "path": "frontend/src/components/products/ProductCard.tsx",
+          "operation": "create",
+          "description": "Create a clean product card showing photo, name, price, and an Add to Cart button. Use shadcn-ui Card/Button components for consistent UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useProducts.ts",
+          "operation": "create",
+          "description": "Add React Query hooks to load products from the backend actor (getProducts) and expose loading/error states for the Shop page."
+        },
+        {
+          "path": "frontend/src/utils/money.ts",
+          "operation": "create",
+          "description": "Add utility formatting for displaying prices (e.g., convert cents to currency display) used across product cards, cart, and checkout."
+        },
+        {
+          "path": "frontend/src/utils/productImages.ts",
+          "operation": "create",
+          "description": "Map backend Product.imageRef values to the required generated static images under frontend/public/assets/generated so seeded catalog items render correct photos."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add Product Details page showing full product info and Add to Cart action.",
+      "acceptanceCriteria": [
+        "Clicking a product from the listing opens a Product Details view",
+        "Product Details includes image, name, price, category, and description",
+        "User can add the product to the cart from Product Details"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ProductDetailsPage.tsx",
+          "operation": "create",
+          "description": "Create a Product Details view that loads a product by ID from the backend actor (getProductById) and displays image, name, price, category, and description with an Add to Cart action."
+        },
+        {
+          "path": "frontend/src/hooks/useProduct.ts",
+          "operation": "create",
+          "description": "Add a React Query hook to fetch a single product by ID from the backend actor and support Product Details loading/error states."
+        },
+        {
+          "path": "frontend/src/router.tsx",
+          "operation": "modify",
+          "description": "Wire the Product Details route (e.g., /product/:id) and ensure Shop product cards link to it via router navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Implement cart state with add/edit/remove, subtotal/total, and persistence across refresh within a session.",
+      "acceptanceCriteria": [
+        "Add to Cart updates the cart item count and cart contents",
+        "Cart page supports quantity changes and item removal",
+        "Cart contents persist after page refresh (e.g., via local storage)",
+        "Cart page shows subtotal and total"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/cart/cartTypes.ts",
+          "operation": "create",
+          "description": "Define cart item types and helper calculations (line totals, subtotal/total) for consistent use across the app."
+        },
+        {
+          "path": "frontend/src/cart/CartProvider.tsx",
+          "operation": "create",
+          "description": "Implement a Cart context/provider with add/update/remove/clear operations and persistence using localStorage so page refresh does not lose the cart."
+        },
+        {
+          "path": "frontend/src/hooks/useCart.ts",
+          "operation": "create",
+          "description": "Add a convenience hook for interacting with the cart context across pages/components."
+        },
+        {
+          "path": "frontend/src/pages/CartPage.tsx",
+          "operation": "create",
+          "description": "Implement Cart page UI with editable quantities, remove actions, subtotal/total display, and a proceed-to-checkout action. Use shadcn-ui Input/Button components for consistent UX. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Display live cart item count in the header and link to the Cart page."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap the app with CartProvider so cart state is available across all routes."
+        },
+        {
+          "path": "frontend/src/components/products/ProductCard.tsx",
+          "operation": "modify",
+          "description": "Wire the Add to Cart button to CartProvider actions and ensure it works from the Shop page."
+        },
+        {
+          "path": "frontend/src/pages/ProductDetailsPage.tsx",
+          "operation": "modify",
+          "description": "Wire the Add to Cart action from Product Details into the CartProvider."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create a checkout flow to collect customer details, review cart, place an order, and show an order confirmation with order ID and summary.",
+      "acceptanceCriteria": [
+        "Checkout includes cart review and a form for customer details",
+        "User can place an order and receives an order confirmation with an order ID and order summary",
+        "Backend stores the order with items, totals, customer details, status, and timestamps",
+        "If payment is not completed/available, order status reflects that (e.g., Pending)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/CheckoutPage.tsx",
+          "operation": "create",
+          "description": "Implement checkout UI: cart review, customer details form (name/email/phone/shipping address), payment option selection, and Place Order action calling backend createOrder. After order creation, route to payment initiation or confirmation depending on chosen option."
+        },
+        {
+          "path": "frontend/src/hooks/useCreateOrder.ts",
+          "operation": "create",
+          "description": "Add a React Query mutation hook that calls the backend actor createOrder and returns the created order ID for checkout flow wiring."
+        },
+        {
+          "path": "frontend/src/pages/OrderConfirmationPage.tsx",
+          "operation": "create",
+          "description": "Create an order confirmation screen that loads order details (getOrder) and displays order ID, item summary, totals, and payment status."
+        },
+        {
+          "path": "frontend/src/hooks/useOrder.ts",
+          "operation": "create",
+          "description": "Add a React Query hook to fetch an order by ID (getOrder) for the confirmation page and payment return handling."
+        },
+        {
+          "path": "frontend/src/router.tsx",
+          "operation": "modify",
+          "description": "Wire routes for /checkout and /order/:orderId and ensure Cart -> Checkout and post-order navigation are connected."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Integrate Stripe Checkout for payments and reflect Paid/Failed/Pending status on the confirmation page.",
+      "acceptanceCriteria": [
+        "Checkout can initiate a Stripe Checkout session for an order",
+        "After returning from payment, the order status is updated to reflect payment state (Paid/Failed/Pending)",
+        "UI clearly displays payment status on the order confirmation page",
+        "Payment methods shown are determined by Stripe configuration/region (no hardcoded guarantees beyond Stripe)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/payments/useCreateCheckoutSession.ts",
+          "operation": "create",
+          "description": "Implement the Stripe component's required checkout hook logic: call backend createCheckoutSession, JSON-parse the result, validate a non-empty url, and return the session. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/payments/PaymentButton.tsx",
+          "operation": "create",
+          "description": "Create a payment component used by Checkout to initiate Stripe Checkout with ShoppingItem[] and redirect via window.location.href to the returned Stripe session url (never router navigation). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/payments/PaymentSuccessPage.tsx",
+          "operation": "create",
+          "description": "Implement Stripe return handling for success: read Stripe session ID from URL (when available), call backend getStripeSessionStatus and updateOrderPaymentStatus, then route to the order confirmation page. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/payments/PaymentFailurePage.tsx",
+          "operation": "create",
+          "description": "Implement Stripe return handling for failure/cancel: set the order payment status to Failed or keep Pending as appropriate, then route to the order confirmation page with a clear message. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/payments/PaymentSetupPanel.tsx",
+          "operation": "create",
+          "description": "Implement the Stripe component's required PaymentSetup UI (admin-only) that checks isStripeConfigured and allows calling setStripeConfiguration when not configured; embed as a conditional panel within Checkout so no new public routes are required. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/CheckoutPage.tsx",
+          "operation": "modify",
+          "description": "Wire payment option selection to use PaymentButton (Stripe Checkout) after creating an order, and show PaymentSetupPanel only when needed (admin-only and only if Stripe is not configured)."
+        },
+        {
+          "path": "frontend/src/pages/OrderConfirmationPage.tsx",
+          "operation": "modify",
+          "description": "Display payment status (Paid/Failed/Pending) prominently and ensure the UI updates after returning from Stripe."
+        },
+        {
+          "path": "frontend/src/router.tsx",
+          "operation": "modify",
+          "description": "Add required routes /payment-success and /payment-failure and ensure they are reachable from Stripe return URLs."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add search and category filtering on the Home/Shop page with clearable selections.",
+      "acceptanceCriteria": [
+        "Typing in the search field filters the visible products by name",
+        "Selecting a category filters products to that category",
+        "User can clear filters to return to the full product list",
+        "Filtering works smoothly on mobile and desktop"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCategories.ts",
+          "operation": "create",
+          "description": "Add a React Query hook to load categories from the backend actor (getCategories) for header/category navigation."
+        },
+        {
+          "path": "frontend/src/storefront/filtersStore.ts",
+          "operation": "create",
+          "description": "Implement a lightweight shared filter state (search text + selected category) so Header controls and Shop listing stay in sync."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Wire search input and category selector to shared filter state; include a clear-filters action and ensure it remains usable on mobile. Use shadcn-ui inputs/menus/sheet patterns as appropriate. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ShopPage.tsx",
+          "operation": "modify",
+          "description": "Apply search/category filters to the loaded products list (filter by name, optionally description) and show a clear empty-state when no products match."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Ensure all core pages are responsive and mobile-friendly with tap-friendly controls and readable typography.",
+      "acceptanceCriteria": [
+        "All core pages (Shop, Product Details, Cart, Checkout) are usable on a small viewport without horizontal scrolling",
+        "Interactive controls meet tap-friendly sizing expectations",
+        "Typography remains readable at common mobile widths"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global styles and Tailwind base layers ensuring responsive typography, comfortable line-height, and tap-friendly default sizes; keep the design aligned with a minimalist storefront."
+        },
+        {
+          "path": "frontend/src/components/layout/StoreLayout.tsx",
+          "operation": "modify",
+          "description": "Ensure layout container paddings and spacing adapt for small screens; prevent horizontal overflow and keep navigation accessible."
+        },
+        {
+          "path": "frontend/src/pages/ShopPage.tsx",
+          "operation": "modify",
+          "description": "Tune product grid breakpoints and card spacing for mobile-first layout (single-column to multi-column) without layout breakage."
+        },
+        {
+          "path": "frontend/src/pages/CartPage.tsx",
+          "operation": "modify",
+          "description": "Ensure quantity controls, remove buttons, and checkout CTA meet tap-friendly sizing and layout constraints on mobile."
+        },
+        {
+          "path": "frontend/src/pages/CheckoutPage.tsx",
+          "operation": "modify",
+          "description": "Ensure checkout form fields and actions are comfortable on mobile (stacked layout, accessible labels, appropriate spacing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Apply a consistent minimalist theme (white base, warm neutral accents, large fonts, generous spacing, product-forward layouts).",
+      "acceptanceCriteria": [
+        "All pages share consistent typography, spacing, and color usage",
+        "Background is primarily white with warm neutral accents (not blue/purple)",
+        "Product imagery is visually emphasized (card/layout hierarchy)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/theme/tokens.ts",
+          "operation": "create",
+          "description": "Define a small set of theme tokens (warm neutrals, charcoal, spacing, radii) used consistently across components/pages."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust Tailwind theme extensions to reflect warm neutral accent colors and consistent radii/shadows aligned with the minimalist craft-store look."
+        },
+        {
+          "path": "frontend/src/components/products/ProductCard.tsx",
+          "operation": "modify",
+          "description": "Emphasize product imagery and whitespace in the card layout; ensure consistent typography scale and warm-neutral accents for actions. Use shadcn-ui styling conventions where applicable. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Apply consistent typography and warm neutral accents; ensure the header remains minimal and product-forward (logo + search + categories)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Add required generated static images under frontend/public/assets/generated and render them (logo, hero banner, product images).",
+      "acceptanceCriteria": [
+        "Generated images are present in frontend/public/assets/generated with the specified filenames",
+        "Header displays the generated logo image",
+        "Home/Shop displays a hero/banner image",
+        "Seeded products display the generated product images as their photos"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/craftstore-logo.dim_512x256.png",
+          "operation": "create",
+          "description": "Add the generated logo asset at frontend/public/assets/generated/craftstore-logo.dim_512x256.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/craftstore-hero.dim_1600x600.png",
+          "operation": "create",
+          "description": "Add the generated hero/banner asset at frontend/public/assets/generated/craftstore-hero.dim_1600x600.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/product-bangles-red.dim_800x800.png",
+          "operation": "create",
+          "description": "Add the generated product image asset at frontend/public/assets/generated/product-bangles-red.dim_800x800.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/product-leather-bag.dim_800x800.png",
+          "operation": "create",
+          "description": "Add the generated product image asset at frontend/public/assets/generated/product-leather-bag.dim_800x800.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/product-accessories-mix.dim_800x800.png",
+          "operation": "create",
+          "description": "Add the generated product image asset at frontend/public/assets/generated/product-accessories-mix.dim_800x800.png."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Render the header logo using frontend/public/assets/generated/craftstore-logo.dim_512x256.png and ensure it scales well on mobile."
+        },
+        {
+          "path": "frontend/src/pages/ShopPage.tsx",
+          "operation": "modify",
+          "description": "Render the hero/banner at the top of the Shop page using frontend/public/assets/generated/craftstore-hero.dim_1600x600.png with responsive sizing."
+        },
+        {
+          "path": "frontend/src/utils/productImages.ts",
+          "operation": "modify",
+          "description": "Ensure seeded products resolve imageRef to the correct generated images: frontend/public/assets/generated/product-bangles-red.dim_800x800.png, frontend/public/assets/generated/product-leather-bag.dim_800x800.png, and frontend/public/assets/generated/product-accessories-mix.dim_800x800.png."
+        }
+      ]
+    }
+  ]
+}

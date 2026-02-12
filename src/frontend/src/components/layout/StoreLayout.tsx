@@ -1,0 +1,13 @@
+import { Outlet } from '@tanstack/react-router';
+import Header from './Header';
+import Footer from './Footer';
+
+export default function StoreLayout({ children }: { children?: React.ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1">{children || <Outlet />}</main>
+      <Footer />
+    </div>
+  );
+}
